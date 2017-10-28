@@ -1,7 +1,9 @@
-import {getBoardGames} from "../Api/boardGamesApi";
+import {getBoardGames, postRating} from "../Api/boardGamesApi";
 
 export const FETCH_BOARD_GAME_LIST = 'FETCH_BOARD_GAME_LIST';
 export const FETCH_BOARD_GAME_LIST_SUCCESS = 'FETCH_BOARD_GAME_LIST_SUCCESS';
+
+export const SHOW_DETAIL = 'SHOW_DETAIL';
 
 export function fetchBoardGames() {
   return function (dispatch) {
@@ -10,4 +12,12 @@ export function fetchBoardGames() {
       dispatch({type: FETCH_BOARD_GAME_LIST_SUCCESS, payload: boardGames})
     });
   }
-};
+}
+
+export function showDetail(id) {
+  return {type: SHOW_DETAIL, payload: id};
+}
+
+export function addRating(id, rating){
+  postRating(id, rating);
+}

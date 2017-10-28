@@ -1,22 +1,19 @@
 import React from "react";
-import {getBoardGames} from "../Api/boardGamesApi";
-import {ListContainer} from "../containers/List";
+import { List } from "./List";
+import {Detail} from "./Detail";
 
 const containerStyle = {
   display: 'flex',
   flexDirection: 'row',
 };
-// Home page component
-export default class Home extends React.Component {
-  componentWillMount(){
-    getBoardGames();
-  }
+
+export default class Home extends React.PureComponent {
   render() {
     return (
       <div className="page-home">
-        <h4>Hello world!</h4>
         <div style={containerStyle}>
-          <ListContainer/>
+          <List fetchBoardGames={this.props.fetchBoardGames} boardGames={this.props.boardGames} isFetching={this.props.isFetching} showDetail={this.props.showDetail} />
+          <Detail detail={this.props.detail} addRating={this.props.addRating}/>
         </div>
       </div>
     );

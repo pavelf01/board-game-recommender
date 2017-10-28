@@ -16,13 +16,17 @@
   },
   "babel": {
     "presets": [
-      "es2015",
-      "react",
-      "stage-3"
+      [
+        "node8"
+      ],
+      [
+        "react"
+      ]
     ]
   },
   "author": "Recommender",
   "dependencies": {
+    "prop-types": "latest",
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",
@@ -35,12 +39,14 @@
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.10",
     "babel-polyfill": "^6.20.0",
-    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-node8": "^1.2.0",
     "babel-preset-react": "^6.16.0",
-    "babel-preset-stage-3": "^6.17.0",
+    "babel-preset-stage-3": "^6.24.1",
     "babel-runtime": "^6.20.0",
     "clean-webpack-plugin": "^0.1.15",
     "css-loader": "^0.26.1",
