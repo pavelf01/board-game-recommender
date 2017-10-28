@@ -5,3 +5,8 @@ export function getBoardGames() {
 export function postRating(id, rating) {
   // some post method
 }
+
+// returning array of items by substring
+export function getByName(name) {
+  return Promise.resolve([{name: 'Scythe', id: 1}]);
+}

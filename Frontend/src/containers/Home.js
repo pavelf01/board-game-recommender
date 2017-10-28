@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import {addRating, fetchBoardGames, showDetail} from "../actions/boardGameListActions";
+import {addRating, fetchBoardGames, search, showDetail} from "../actions/boardGameListActions";
 import Home from "../components/Home";
 
 const mapStateToProps = function (state) {
@@ -14,7 +14,8 @@ const mapDispatchToProps = function(dispatch) {
   return {
     fetchBoardGames: () => dispatch(fetchBoardGames()),
     showDetail: (id) => dispatch(showDetail(id)),
-    addRating: (id, rating) => dispatch(addRating(id, rating))
+    addRating: (id, rating) => dispatch(addRating(id, rating)),
+    search: (name) => dispatch(search(name))
   }
 };
 
