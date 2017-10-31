@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGGImport", "BGGImport\BGGImport.csproj", "{0EE58063-7CA8-4AE9-89C7-2B01A5413401}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{F266EB80-AE6F-40F8-B7D4-2D2B9AB4769E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0EE58063-7CA8-4AE9-89C7-2B01A5413401}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EE58063-7CA8-4AE9-89C7-2B01A5413401}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EE58063-7CA8-4AE9-89C7-2B01A5413401}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F266EB80-AE6F-40F8-B7D4-2D2B9AB4769E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F266EB80-AE6F-40F8-B7D4-2D2B9AB4769E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F266EB80-AE6F-40F8-B7D4-2D2B9AB4769E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F266EB80-AE6F-40F8-B7D4-2D2B9AB4769E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
