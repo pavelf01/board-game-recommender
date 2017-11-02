@@ -1,12 +1,14 @@
-﻿using Riganti.Utils.Infrastructure.Core;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Entity
 {
-    public class BoardGameGategory : IEntity<int>
+    public class BoardGameCategory : BaseEntity<int>
     {
+        [Key]
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+        public List<BoardGame> Games { get; set; }
     }
 }

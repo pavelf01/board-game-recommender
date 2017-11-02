@@ -1,4 +1,5 @@
-﻿using Castle.Windsor;
+﻿using BL.Bootstrap;
+using Castle.Windsor;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 
@@ -20,6 +21,7 @@ namespace API
         private void BootstrapContainer()
         {
             container.Install(new WebApiInstaller());
+            container.Install(new DI());
 
             GlobalConfiguration.Configuration.Services
                 .Replace(typeof(IHttpControllerActivator), new WindsorCompositionRoot(container));

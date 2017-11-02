@@ -1,14 +1,14 @@
-﻿using Riganti.Utils.Infrastructure.Core;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Entity
 {
-    public class UserRating : IEntity<int>
+    public class UserRating : BaseEntity<int>
     {
+        [Key]
         public int Id { get; set; }
         public string Comment { get; set; }
         [Required]
-        public int Rating { get; set; }
+        public float Rating { get; set; }
         [Required]
         public User User { get; set; }
     }

@@ -289,7 +289,7 @@ namespace Xml2CSharp
         [XmlElement(ElementName = "image")]
         public string Image { get; set; }
         [XmlElement(ElementName = "name")]
-        public Name Name { get; set; }
+        public List<Name> Name { get; set; }
         [XmlElement(ElementName = "description")]
         public string Description { get; set; }
         [XmlElement(ElementName = "yearpublished")]

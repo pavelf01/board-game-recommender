@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0EE58063-7CA8-4AE9-89C7-2B01A5413401}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{1726D5C1-34BA-4BEE-B01E-1EECB12B4670}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BGGImport</RootNamespace>
-    <AssemblyName>BGGImport</AssemblyName>
+    <RootNamespace>BL</RootNamespace>
+    <AssemblyName>BL</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -49,6 +46,14 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Riganti.Utils.Infrastructure.Core, Version=2.1.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Riganti.Utils.Infrastructure.Core.2.1.6\lib\net461\Riganti.Utils.Infrastructure.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Riganti.Utils.Infrastructure.EntityFramework, Version=2.1.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Riganti.Utils.Infrastructure.EntityFramework.2.1.6\lib\net461\Riganti.Utils.Infrastructure.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -63,20 +68,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Importer.cs" />
-    <Compile Include="POCO.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="App\AppUnitOfWork.cs" />
+    <Compile Include="App\AppUnitOfWorkProvider.cs" />
+    <Compile Include="Bootstrap\DI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\BoardGameDesignersRepository.cs" />
+    <Compile Include="Repositories\BoardGameCategoriesRepository.cs" />
+    <Compile Include="Repositories\BoardGamePublishersRepository.cs" />
+    <Compile Include="Repositories\UserRatingsRepository.cs" />
+    <Compile Include="Repositories\UsersRepository.cs" />
+    <Compile Include="Repositories\BoardGameArtistsRepository.cs" />
+    <Compile Include="Repositories\BoardGamesRepository.cs" />
+    <Compile Include="Services\BGGItemService.cs" />
+    <Compile Include="Services\BaseService.cs" />
+    <Compile Include="Services\BoardGameDesignersService.cs" />
+    <Compile Include="Services\BoardGamePublishersService.cs" />
+    <Compile Include="Services\BoardGameCategoriesService.cs" />
+    <Compile Include="Services\BoardGameArtistsService.cs" />
+    <Compile Include="Services\UserRatingsService.cs" />
+    <Compile Include="Services\UserService.cs" />
+    <Compile Include="Services\BoardGamesService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BL\BL.csproj">
-      <Project>{1726d5c1-34ba-4bee-b01e-1eecb12b4670}</Project>
-      <Name>BL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DAL\DAL.csproj">
       <Project>{f266eb80-ae6f-40f8-b7d4-2d2b9ab4769e}</Project>
       <Name>DAL</Name>

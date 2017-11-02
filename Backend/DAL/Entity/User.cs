@@ -1,10 +1,10 @@
-﻿using Riganti.Utils.Infrastructure.Core;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Entity
 {
-    public class User : IEntity<int>
+    public class User : BaseEntity<int>
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]

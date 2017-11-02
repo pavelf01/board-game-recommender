@@ -1,14 +1,15 @@
-﻿using DAL.Entity;
+﻿using BL.Services;
+using Castle.Windsor;
+using DAL.Entity;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Serialization;
 using Xml2CSharp;
 
@@ -16,46 +17,60 @@ namespace BGGImport
 {
     class Importer
     {
-        const string API_URI = "https://www.boardgamegeek.com/xmlapi2/thing?id={0}&type=boardgame";
+        const string API_URI = "https://www.boardgamegeek.com/xmlapi2/thing?id={0}&type=boardgame&stats=1&ratingcomments=1";
         private XmlSerializer serializer;
 
+        private BoardGamesService boardGameService;
+        private UsersService userService;
+        private UserRatingsService userRatingsService;
+
+        private IWindsorContainer Container;
+
         private ObservableCollection<string> downloadedXmls;
-        public Importer()
+        public Importer(IWindsorContainer Container)
         {
+            this.boardGameService = Container.Resolve<BoardGamesService>();
+            this.userRatingsService = Container.Resolve<UserRatingsService>();
+
+            this.Container = Container;
+
+            this.userService = Container.Resolve<UsersService>();
             this.serializer = new XmlSerializer(typeof(Items));
             this.downloadedXmls = new ObservableCollection<string>();
         }
 
         public void Import(int[] Ids, Action<int> DownloadedProgressChanged, Action<int> EntityPersistedProgressChanged)
         {
+            //this.WatchDownloadChanges(EntityPersistedProgressChanged);
+            //this.DownloadXmls(Ids, DownloadedProgressChanged);
+            //foreach (var item in this.downloadedXmls)
+            //{
+            //    this.ConvertAndPersist(this.Deserialize(item as string).Item);
+            //    EntityPersistedProgressChanged(this.downloadedXmls.Count);
+            //}
             new Task(() =>
             {
                 this.DownloadXmls(Ids, DownloadedProgressChanged);
             }).Start();
-            new Task(() =>
-            {
-                this.WatchDownloadChanges(EntityPersistedProgressChanged);
-            }).Start();
+            this.WatchDownloadChanges(EntityPersistedProgressChanged);
         }
 
         private void DownloadXmls(int[] Ids, Action<int> DownloadedProgressChanged)
         {
             using (var wc = new WebClient())
             {
-                int i = 1;
-                foreach (var id in Ids)
+                int i = 0;
+                while (i < Ids.Length)
                 {
                     try
                     {
-                        var a = String.Format(API_URI, id);
-                        var b = wc.DownloadString(a);
-                        this.downloadedXmls.Add(b);
+                        var xml = wc.DownloadString(String.Format(API_URI, Ids[i]));
+                        this.downloadedXmls.Add(xml);
                         DownloadedProgressChanged(i++);
-                        if (i % 15 == 0) Thread.Sleep(4000);
                     }
                     catch (Exception exc)
                     {
-
+                        Thread.Sleep(3000);
                     }
                 }
             }
@@ -66,10 +81,17 @@ namespace BGGImport
             this.downloadedXmls.CollectionChanged += (sender, args) =>
             {
                 if (args.NewItems.Count == 0) return;
-                foreach (var item in args.NewItems)
+                try
                 {
-                    this.ConvertAndPersist(this.Deserialize(item as string).Item);
-                    EntityPersistedProgressChanged(this.downloadedXmls.Count);
+                    foreach (var item in args.NewItems)
+                    {
+                        this.ConvertAndPersist(this.Deserialize(item as string).Item);
+                        EntityPersistedProgressChanged(this.downloadedXmls.Count);
+                    }
+                }
+                catch (Exception e)
+                {
+
                 }
             };
         }
@@ -77,7 +99,7 @@ namespace BGGImport
         private void ConvertAndPersist(Item item)
         {
             var game = this.MapToEntity(item);
-            //persist
+            this.boardGameService.Create(game);
         }
 
         private Items Deserialize(string xml)
@@ -90,62 +112,59 @@ namespace BGGImport
 
         private BoardGame MapToEntity(Item item)
         {
-            return new BoardGame
-            {
-                Id = Int32.Parse(item.Id),
-                Name = "dummy",
-                ThumbnailImageURL = item.Thumbnail,
-                Description = item.Description,
-                Published = new DateTime(Int32.Parse(item.Yearpublished.Value), 1, 1),
-                MinimalPlayers = Int32.Parse(item.Maxplayers.Value ?? item.Minplayers.Value),
-                MaximalPlayers = Int32.Parse(item.Minplayers.Value ?? item.Maxplayers.Value),
-                MinimalPlayingTime = Int32.Parse(item.Minplaytime.Value ?? (item.Playingtime.Value ?? item.Maxplaytime.Value)),
-                MaximalPlayingTime = Int32.Parse(item.Maxplaytime.Value ?? (item.Playingtime.Value ?? item.Minplaytime.Value)),
-                MinimalPlayerAge = Int32.Parse(item.Minage.Value),
-                Categories = this.MapLink<BoardGameGategory>(
-                    item.Link.Where(x => x.Type == "boardgamecategory"), (i) => new BoardGameGategory { Name = i.Value }).ToList(),
-                Artists = this.MapLink<BoardGameArtist>(
-                    item.Link.Where(x => x.Type == "boardgameartist"), (i) => new BoardGameArtist { Name = i.Value }).ToList(),
-                Designers = this.MapLink<BoardGameDeisgner>(
-                    item.Link.Where(x => x.Type == "boardgamedesigner"), (i) => new BoardGameDeisgner { Name = i.Value }).ToList(),
-                Publishers = this.MapLink<BoardGamePublisher>(
-                    item.Link.Where(x => x.Type == "boardgamepublisher"), (i) => new BoardGamePublisher { Name = i.Value }).ToList(),
-                Ratings = this.MapComments(item.Comments).ToList()
-            };
+            var boardGame = this.boardGameService.GetByBGGIdentifier(Int32.Parse(item.Id)) ?? new BoardGame();
+            boardGame.BGGId = Int32.Parse(item.Id);
+            boardGame.Name = item.Name.Where(x => x.Type == "primary").FirstOrDefault().Value;
+            boardGame.ThumbnailImageURL = item.Thumbnail;
+            boardGame.Description = item.Description;
+            boardGame.Published = new DateTime(Int32.Parse(item.Yearpublished.Value), 1, 1);
+            boardGame.MinimalPlayers = Int32.Parse(item.Minplayers.Value ?? item.Maxplayers.Value);
+            boardGame.MaximalPlayers = Int32.Parse(item.Maxplayers.Value ?? item.Minplayers.Value);
+            boardGame.MinimalPlayingTime = Int32.Parse(item.Minplaytime.Value ?? (item.Playingtime.Value ?? item.Maxplaytime.Value));
+            boardGame.MaximalPlayingTime = Int32.Parse(item.Maxplaytime.Value ?? (item.Playingtime.Value ?? item.Minplaytime.Value));
+            boardGame.MinimalPlayerAge = Int32.Parse(item.Minage.Value);
+            boardGame.Categories = this.MapLink<BoardGameCategory>(
+                                item.Link.Where(x => x.Type == "boardgamecategory"), (i) => new BoardGameCategory { Name = i.Value }, Container.Resolve<BoardGameCategoriesService>()).ToList();
+            boardGame.Artists = this.MapLink<BoardGameArtist>(
+                                item.Link.Where(x => x.Type == "boardgameartist"), (i) => new BoardGameArtist { Name = i.Value }, Container.Resolve<BoardGameArtistsService>()).ToList();
+            boardGame.Designers = this.MapLink<BoardGameDesigner>(
+                                item.Link.Where(x => x.Type == "boardgamedesigner"), (i) => new BoardGameDesigner { Name = i.Value }, Container.Resolve<BoardGameDesignersService>()).ToList();
+            boardGame.Publishers = this.MapLink<BoardGamePublisher>(
+                                item.Link.Where(x => x.Type == "boardgamepublisher"), (i) => new BoardGamePublisher { Name = i.Value }, Container.Resolve<BoardGamePublishersService>()).ToList();
+            boardGame.Ratings = this.MapComments(item.Comments).ToList();
+            return boardGame;
         }
 
-        private IEnumerable<T> MapLink<T>(IEnumerable<Link> Links, Func<Link, T> Factory/*,service*/)
+        private IEnumerable<T> MapLink<T>(IEnumerable<Link> Links, Func<Link, T> Factory, BGGItemService<T, int, string> service)
         {
             foreach (var link in Links)
             {
-                //var entity = entity service get 
-                //if entity = null
-                var entity = Factory(link);
-                //persist entity
-                yield return entity;
+                if(link.Value == "Economic")
+                {
+
+                }
+                var entity = service.GetByBGGIdentifier(link.Value);
+                yield return entity == null ? Factory(link) : entity;
             }
         }
 
         private IEnumerable<UserRating> MapComments(Comments Comments)
         {
+            var comments = new List<UserRating>();
             foreach (var comment in Comments.Comment)
             {
-                //var user = entity service get comment.Username
-                //if user = null
-                var user = new User
-                {
-                    UserName = comment.Username
-                };
-                //persist user
-                var entity = new UserRating
+                if (comments.Count(x => x.User.UserName == comment.Username) > 0) continue;
+                comments.Add(new UserRating
                 {
                     Comment = comment.Value,
-                    Rating = Int32.Parse(comment.Rating),
-                    User = user
-                };
-                //persist entity
-                yield return entity;
+                    Rating = float.Parse(comment.Rating, CultureInfo.InvariantCulture.NumberFormat),
+                    User = userService.GetByBGGIdentifier(comment.Username) ?? new User
+                    {
+                        UserName = comment.Username
+                    }
+                });
             }
+            return comments;
         }
     }
 }
