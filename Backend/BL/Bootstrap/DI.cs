@@ -19,10 +19,10 @@ namespace BL.Bootstrap
                    .Instance(new MainContext())
                    .LifestyleTransient(),
                 Classes.FromAssemblyContaining<AppUnitOfWork>()
-                    .BasedOn(typeof(BaseRepository<,>))
+                    .BasedOn(typeof(BaseRepository<>))
                     .LifestyleTransient(),
                 Classes.FromAssemblyContaining<AppUnitOfWork>()
-                    .BasedOn(typeof(BaseService<,>))
+                    .BasedOn(typeof(BaseService<>))
                     .LifestyleTransient()
            );
         }

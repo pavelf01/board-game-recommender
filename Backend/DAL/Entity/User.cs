@@ -2,7 +2,7 @@
 
 namespace DAL.Entity
 {
-    public class User : BaseEntity<int>
+    public class User : BaseEntity
     {
         [Key]
         public int Id { get; set; }

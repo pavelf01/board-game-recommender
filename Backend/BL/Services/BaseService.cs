@@ -1,8 +1,8 @@
 ﻿namespace BL.Services
 {
-    public abstract class BaseService<TEntity, TKey>
+    public abstract class BaseService<TEntity>
     {
-        public abstract TEntity Get(TKey ID);
+        public abstract TEntity Get(int ID);
         public abstract void Create(TEntity Entity);
     }
 }

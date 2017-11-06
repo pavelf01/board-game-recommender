@@ -1,7 +1,7 @@
 ﻿namespace DAL.Entity
 {
-    public interface BaseEntity<TKey>
+    public interface BaseEntity
     {
-        TKey Id { get; set; }
+        int Id { get; set; }
     }
 }

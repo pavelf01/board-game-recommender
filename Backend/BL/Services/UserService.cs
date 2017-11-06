@@ -3,7 +3,7 @@ using DAL.Entity;
 
 namespace BL.Services
 {
-    public class UsersService : BGGItemService<User, int, string>
+    public class UsersService : BGGItemService<User, string>
     {
         private readonly UsersRepository _repository;
 
@@ -28,6 +28,11 @@ namespace BL.Services
         public override User GetByBGGIdentifier(string Key)
         {
             return this.GetUserByUserName(Key);
+        }
+
+        public User GetApplicationUser()
+        {
+            return this.GetUserByUserName("pv254_dummy_user");
         }
     }
 }

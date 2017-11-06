@@ -135,7 +135,7 @@ namespace BGGImport
             return boardGame;
         }
 
-        private IEnumerable<T> MapLink<T>(IEnumerable<Link> Links, Func<Link, T> Factory, BGGItemService<T, int, string> service)
+        private IEnumerable<T> MapLink<T>(IEnumerable<Link> Links, Func<Link, T> Factory, BGGItemService<T, string> service)
         {
             foreach (var link in Links)
             {

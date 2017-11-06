@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Entity
 {
-    public class BoardGame : BaseEntity<int>
+    public class BoardGame : BaseEntity
     {
         [Key]
         public int Id { get; set; }

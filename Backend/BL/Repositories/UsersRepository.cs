@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BL.Repositories
 {
-    public class UsersRepository : BaseRepository<User, int>
+    public class UsersRepository : BaseRepository<User>
     {
         public UsersRepository(DbContext Context) : base(Context) { }
 

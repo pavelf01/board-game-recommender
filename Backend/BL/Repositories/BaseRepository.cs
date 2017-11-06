@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BL.Repositories
 {
-    public class BaseRepository<TEntity,TKey> where TEntity : class, BaseEntity<TKey>
+    public class BaseRepository<TEntity> where TEntity : class, BaseEntity
     {
         protected  DbContext Context { get; set; }
         public BaseRepository(DbContext Context)
@@ -18,9 +18,9 @@ namespace BL.Repositories
             Context.SaveChanges();
         }
 
-        public TEntity GetById(TKey Id)
+        public TEntity GetById(int Id)
         {
-            return Context.Set<TEntity>().Where(i => i.Id.Equals(Id)).FirstOrDefault();
+            return Context.Set<TEntity>().Where(i => i.Id == Id).FirstOrDefault();
         }
     }
 }

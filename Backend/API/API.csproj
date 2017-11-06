@@ -103,8 +103,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\UserRatings.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\UserRatingsController.cs" />
+    <Compile Include="Controllers\BoardGamesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

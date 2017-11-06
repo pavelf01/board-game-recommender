@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BL.Repositories
 {
-    public class BoardGameCategoriesRepository : BaseRepository<BoardGameCategory, int>
+    public class BoardGameCategoriesRepository : BaseRepository<BoardGameCategory>
     {
         public BoardGameCategoriesRepository(DbContext Context) : base(Context)
         {

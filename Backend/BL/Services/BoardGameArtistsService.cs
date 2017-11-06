@@ -3,7 +3,7 @@ using DAL.Entity;
 
 namespace BL.Services
 {
-    public class BoardGameArtistsService : BGGItemService<BoardGameArtist, int, string>
+    public class BoardGameArtistsService : BGGItemService<BoardGameArtist, string>
     {
         private readonly BoardGameArtistsRepository _repository;
 

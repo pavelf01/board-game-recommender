@@ -2,7 +2,7 @@
 
 namespace BL.Services
 {
-    public abstract class BGGItemService<TEntity, TKey,TBGGKey> : BaseService<TEntity, TKey>
+    public abstract class BGGItemService<TEntity,TBGGKey> : BaseService<TEntity>
     {
         public virtual TEntity GetByBGGIdentifier(TBGGKey Key)
         {
