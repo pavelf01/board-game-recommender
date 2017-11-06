@@ -22,17 +22,23 @@ export class Detail extends React.Component {
   };
 
   render() {
-    return (<div style={detailStyle}  className="card">
-      <div className="card-body">
-        <h4 className="card-title">{this.props.detail.name}</h4>
+    if(this.props.detail.Name) {
+      return (<div style={detailStyle} className="card">
+        <div className="card-body">
+          <h4 className="card-title">{this.props.detail.Name}</h4>
+          <p><b>Description:</b> {this.props.detail.Description}</p>
+          <p><b>Categories:</b> {this.props.detail.Categories.map(category => <span>{category.Name} </span>)}</p>
 
-        <div className="input-group">
-          <input type="number" className="form-control" placeholder="Rating" aria-label="Add rating" min={0} max={10} value={this.state.rating} onChange={this.handleRatingChange}></input>
-          <span className="input-group-btn">
+          <div className="input-group">
+            <input type="number" className="form-control" placeholder="Rating" aria-label="Add rating" min={0} max={10}
+                   value={this.state.rating} onChange={this.handleRatingChange}></input>
+            <span className="input-group-btn">
         <button className="btn btn-secondary" type="button">Add rating</button>
       </span>
+          </div>
         </div>
-      </div>
-    </div>);
+      </div>);
+    }
+    return null;
   }
 }

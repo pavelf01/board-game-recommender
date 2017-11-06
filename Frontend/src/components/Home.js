@@ -8,11 +8,19 @@ const containerStyle = {
 };
 
 export default class Home extends React.PureComponent {
+  componentWillMount(){
+    this.props.fetchBoardGames();
+  }
+
   render() {
+    if(this.props.isFetching){
+      return <p>Loading</p>
+    }
+
     return (
       <div className="page-home">
         <div style={containerStyle}>
-          <List fetchBoardGames={this.props.fetchBoardGames} boardGames={this.props.boardGames} isFetching={this.props.isFetching} showDetail={this.props.showDetail} search={this.props.search} />
+          <List boardGames={this.props.boardGames} isFetching={this.props.isFetching} showDetail={this.props.showDetail} search={this.props.search} />
           <Detail detail={this.props.detail} addRating={this.props.addRating}/>
         </div>
       </div>

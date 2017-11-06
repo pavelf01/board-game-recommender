@@ -11,9 +11,7 @@ export class List extends React.PureComponent {
       searchValue: '',
     }
   }
-  componentWillMount(){
-    this.props.fetchBoardGames();
-  }
+
 
   handleSearchInputChange = (event) => {
     this.setState({searchValue: event.target.value});
@@ -21,12 +19,9 @@ export class List extends React.PureComponent {
 
   search = () => {
     this.props.search(this.state.searchValue)
-  }
+  };
 
   render(){
-    if(this.props.isFetching){
-      return <p>Loading</p>
-    }
     return <div style={listStyle} className="card">
       <div className="card-header">
         <h2>Board games</h2>
@@ -37,7 +32,7 @@ export class List extends React.PureComponent {
         <button className="btn btn-secondary" type="button" onClick={this.search}>Go!</button>
       </span>
       </div>
-      <ul className="list-group list-group-flush">{this.props.boardGames.map(item => <li onClick={() => this.props.showDetail(item.id)} className="list-group-item" key={item.id}>{item.name}</li>)}</ul>
+      <ul className="list-group list-group-flush">{this.props.boardGames.map(item => <li onClick={() => this.props.showDetail(item.Id)} className="list-group-item" key={item.Id}>{item.Name}</li>)}</ul>
     </div>
   }
 }

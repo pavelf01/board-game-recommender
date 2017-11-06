@@ -25,7 +25,7 @@ export function addRating(id, rating){
 export function search(name) {
   return function (dispatch) {
     dispatch({type: FETCH_BOARD_GAME_LIST});
-    getByName().then((boardGames) => {
+    getByName(name).then((boardGames) => {
       dispatch({type: FETCH_BOARD_GAME_LIST_SUCCESS, payload: boardGames})
     });
   }

@@ -4,9 +4,8 @@ const initialState = {
   list: [],
   isFetching: false,
   detail: {
-    id: '',
-    name: '',
-    rating: '',
+    Id: '',
+    Name: '',
   }
 };
 
@@ -17,7 +16,7 @@ function boardGamesReducer (state = initialState, action) {
     case FETCH_BOARD_GAME_LIST_SUCCESS:
       return { ...state, list: action.payload, isFetching: false }
     case SHOW_DETAIL:
-      return { ...state, detail: state.list.find(item => item.id === action.payload)}
+      return { ...state, detail: state.list.find(item => item.Id === action.payload)}
   }
   return state;
 }
