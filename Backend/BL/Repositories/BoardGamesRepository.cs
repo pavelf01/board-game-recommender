@@ -21,6 +21,12 @@ namespace BL.Repositories
             this.LoadRealtions(games);
             return games;
         }
+
+        public void Update(BoardGame game)
+        {
+            this.Context.SaveChanges();
+        }
+
         public IEnumerable<BoardGame> GetByFulltextSearch(string term)
         {
             var games = Context.Set<BoardGame>().Where(x => x.Name.Contains(term)).ToList();

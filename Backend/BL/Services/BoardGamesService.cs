@@ -42,5 +42,10 @@ namespace BL.Services
         {
             return _repository.GetByFulltextSearch(term);
         }
+
+        public void Update(BoardGame game)
+        {
+            this._repository.Update(game);
+        }
     }
 }

@@ -17,7 +17,7 @@ namespace BGGImport
 {
     class Importer
     {
-        const string API_URI = "https://www.boardgamegeek.com/xmlapi2/thing?id={0}&type=boardgame&stats=1&ratingcomments=1";
+        const string API_URI = "https://www.boardgamegeek.com/xmlapi2/thing?id={0}&type=boardgame&stats=1&ratingcomments=1&page={1}&pagesize=100";
         private XmlSerializer serializer;
 
         private BoardGamesService boardGameService;
@@ -27,6 +27,7 @@ namespace BGGImport
         private IWindsorContainer Container;
 
         private ObservableCollection<string> downloadedXmls;
+        private List<Item> containsNextPageCommments;
         public Importer(IWindsorContainer Container)
         {
             this.boardGameService = Container.Resolve<BoardGamesService>();
@@ -37,36 +38,39 @@ namespace BGGImport
             this.userService = Container.Resolve<UsersService>();
             this.serializer = new XmlSerializer(typeof(Items));
             this.downloadedXmls = new ObservableCollection<string>();
+            this.containsNextPageCommments = new List<Item>();
         }
 
-        public void Import(int[] Ids, Action<int> DownloadedProgressChanged, Action<int> EntityPersistedProgressChanged)
+        public void Import(int[] Ids, Action<string> LogMessage)
         {
-            //this.WatchDownloadChanges(EntityPersistedProgressChanged);
-            //this.DownloadXmls(Ids, DownloadedProgressChanged);
-            //foreach (var item in this.downloadedXmls)
-            //{
-            //    this.ConvertAndPersist(this.Deserialize(item as string).Item);
-            //    EntityPersistedProgressChanged(this.downloadedXmls.Count);
-            //}
             new Task(() =>
             {
-                this.DownloadXmls(Ids, DownloadedProgressChanged);
+                this.DownloadXmls(Ids, LogMessage);
+                foreach (var item in this.containsNextPageCommments)
+                {
+                    using (var wc = new WebClient())
+                    {
+                        this.DownloadNextComments(wc, item);
+                        LogMessage("Downladed comments for item: " + Int32.Parse(item.Id));
+                    }
+                }
             }).Start();
-            this.WatchDownloadChanges(EntityPersistedProgressChanged);
+            this.WatchDownloadChanges(LogMessage);
         }
 
-        private void DownloadXmls(int[] Ids, Action<int> DownloadedProgressChanged)
+        private void DownloadXmls(int[] Ids, Action<string> LogMessage)
         {
             using (var wc = new WebClient())
             {
-                int i = 0;
+                int i = 1;
                 while (i < Ids.Length)
                 {
                     try
                     {
-                        var xml = wc.DownloadString(String.Format(API_URI, Ids[i]));
+                        var xml = wc.DownloadString(String.Format(API_URI, Ids[i], 1));
                         this.downloadedXmls.Add(xml);
-                        DownloadedProgressChanged(i++);
+                        LogMessage("Downloaded: " + (Ids[i]));
+                        i++;
                     }
                     catch (Exception exc)
                     {
@@ -76,28 +80,55 @@ namespace BGGImport
             }
         }
 
-        private void WatchDownloadChanges(Action<int> EntityPersistedProgressChanged)
+        private void DownloadNextComments(WebClient client, Item item, int page = 2)
+        {
+            while (true)
+            {
+                try
+                {
+                    var xml = client.DownloadString(String.Format(API_URI, item.Id, page));
+                    this.AddNextRatings(this.Deserialize(xml).Item);
+                    if (100 * page < Int32.Parse(item.Comments.Totalitems))
+                    {
+                        this.DownloadNextComments(client, item, page + 1);
+                    }
+                    break;
+                }
+                catch (Exception exc)
+                {
+                    Thread.Sleep(3000);
+                }
+
+            }
+        }
+
+        private void WatchDownloadChanges(Action<string> LogMessage)
         {
             this.downloadedXmls.CollectionChanged += (sender, args) =>
             {
                 if (args.NewItems.Count == 0) return;
-                try
+                foreach (var item in args.NewItems)
                 {
-                    foreach (var item in args.NewItems)
+                    try
                     {
-                        this.ConvertAndPersist(this.Deserialize(item as string).Item);
-                        EntityPersistedProgressChanged(this.downloadedXmls.Count);
+                        this.ConvertAndPersist(this.Deserialize(item as string).Item, LogMessage);
+                        LogMessage("Serialized,flushed OK");
                     }
-                }
-                catch (Exception e)
-                {
-
+                    catch (Exception e)
+                    {
+                        LogMessage("Error: " + e.Message);
+                    }
                 }
             };
         }
 
-        private void ConvertAndPersist(Item item)
+        private void ConvertAndPersist(Item item, Action<string> LogMessage)
         {
+            LogMessage("BGG ID:" + item.Id);
+            if (Int32.Parse(item.Comments.Totalitems) > 100)
+            {
+                this.containsNextPageCommments.Add(item);
+            }
             var game = this.MapToEntity(item);
             this.boardGameService.Create(game);
         }
@@ -106,8 +137,16 @@ namespace BGGImport
         {
             using (var reader = new StringReader(xml))
             {
-                return (Items)this.serializer.Deserialize(new StringReader(xml));
+                var deserialized = this.serializer.Deserialize(new StringReader(xml));
+                return (Items)deserialized;
             }
+        }
+
+        private void AddNextRatings(Item item)
+        {
+            var boardGame = this.boardGameService.GetByBGGIdentifier(Int32.Parse(item.Id));
+            boardGame.Ratings.AddRange(this.MapComments(item.Comments).ToList());
+            this.boardGameService.Update(boardGame);
         }
 
         private BoardGame MapToEntity(Item item)
@@ -139,7 +178,7 @@ namespace BGGImport
         {
             foreach (var link in Links)
             {
-                if(link.Value == "Economic")
+                if (link.Value == "Economic")
                 {
 
                 }

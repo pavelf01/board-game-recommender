@@ -1,9 +1,9 @@
 ﻿using Castle.Windsor;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace BGGImport
 {
@@ -14,16 +14,18 @@ namespace BGGImport
             var container = new WindsorContainer();
             container.Install(new BL.Bootstrap.DI());
             var importer = new Importer(container);
-            importer.Import(Enumerable.Range(1, 100).ToArray(), (int i) =>
-               {
-                   Console.SetCursorPosition(0, 0);
-                   Console.WriteLine(String.Format("Downloaded {0}/{1}", i, 100));
-               }, (int i) =>
-               {
-                   Console.SetCursorPosition(0, 1);
-                   Console.WriteLine(String.Format("Serialized {0}/{1}", i, 100));
-               });
+            importer.Import(ReadIds().Skip(344).Take(2).ToArray(), (string message) =>
+            {
+                Console.WriteLine(message);
+            });
             Console.ReadLine();
+        }
+
+        static IEnumerable<int> ReadIds()
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"ids.txt");
+            string[] ids = File.ReadAllText(path).Split(',');
+            return ids.Select(x => Int32.Parse(x.Replace("\r\n","")));
         }
     }
 }

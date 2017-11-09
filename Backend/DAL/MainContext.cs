@@ -1,12 +1,14 @@
 ﻿using DAL.Entity;
+using MySql.Data.Entity;
 using System.Data.Entity;
 
 namespace DAL
 {
+    [DbConfigurationType(typeof(MySqlEFConfiguration))]
     public class MainContext : DbContext
     {
         public MainContext() :
-            base("name=DefaultConnection")
+            base("name=SSHTunneledConnection")
         {
         }
 
