@@ -1,7 +1,7 @@
 import * as React from "react";
 
 const listStyle = {
-  flexBasis: '70%',
+  flexBasis: '50%',
 };
 
 export class List extends React.PureComponent {
@@ -24,15 +24,15 @@ export class List extends React.PureComponent {
   render(){
     return <div style={listStyle} className="card">
       <div className="card-header">
-        <h2>Board games</h2>
+        <h2>User rated games</h2>
       </div>
       <div className="input-group">
-        <input type="text" className="form-control" placeholder="Search for..." aria-label="Search for..." onChange={this.handleSearchInputChange}></input>
+        <input type="text" className="form-control" placeholder="Search user by ID" aria-label="Search user by ID" onChange={this.handleSearchInputChange}></input>
       <span className="input-group-btn">
         <button className="btn btn-secondary" type="button" onClick={this.search}>Go!</button>
       </span>
       </div>
-      <ul className="list-group list-group-flush">{this.props.boardGames.map(item => <li onClick={() => this.props.showDetail(item.Id)} className="list-group-item" key={item.Id}>{item.Name}</li>)}</ul>
+      <ul className="list-group list-group-flush">{this.props.userRating.map(item => <li onClick={() => this.props.showDetail(item.Id)} className="list-group-item" key={item.Id}>{item.Name}</li>)}</ul>
     </div>
   }
 }

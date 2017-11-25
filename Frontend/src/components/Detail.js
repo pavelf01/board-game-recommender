@@ -1,7 +1,7 @@
 import * as React from "react";
 
 const detailStyle = {
-  flexBasis: '30%',
+
 };
 
 export class Detail extends React.Component {

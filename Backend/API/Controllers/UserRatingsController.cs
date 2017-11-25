@@ -28,6 +28,14 @@ namespace API.Controllers
             this._service.Create(userRating);
             return Request.CreateResponse(HttpStatusCode.OK, userRating.Id);
         }
+        
+        [Route("{id:int}")]
+        [HttpGet]
+        public HttpResponseMessage GetRatingsById(int id)
+        {
+            var userRatings = this._service.GetAllUserRatings(id);
+            return Request.CreateResponse(HttpStatusCode.OK, userRatings);
+        }
 
         [Route("")]
         [HttpPut]

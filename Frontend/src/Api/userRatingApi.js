@@ -1,6 +1,6 @@
-export function getBoardGames() {
+export function getUserRating() {
   //return Promise.resolve([{name: 'Scythe', id: 1}, {name: 'Cyclades', id: 2}]);
-  return fetch('http://localhost:62492/api/boardGames/list')
+  return fetch('http://localhost:62492/api/userRatings/21919')
     .then(function(response) {
       return response.json()
     }).then(function(json) {
@@ -15,8 +15,8 @@ export function postRating(id, rating) {
 }
 
 // returning array of items by substring
-export function getByName(name) {
-  return fetch(`http://localhost:62492/api/boardGames/search/${name}`)
+export function getById(id) {
+  return fetch(`http://localhost:62492/api/userRatings/${id}`)
     .then(function(response) {
       return response.json()
     }).then(function(json) {

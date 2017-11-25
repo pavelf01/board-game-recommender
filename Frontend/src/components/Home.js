@@ -1,15 +1,23 @@
 import React from "react";
 import { List } from "./List";
 import {Detail} from "./Detail";
+import {Recommendations} from "./Recommendations";
 
 const containerStyle = {
   display: 'flex',
   flexDirection: 'row',
 };
 
+const rightSide = {
+  display: 'flex',
+  flexDirection: 'column',
+  flexBasis: '50%',
+  paddingLeft: '15px',
+};
+
 export default class Home extends React.PureComponent {
   componentWillMount(){
-    this.props.fetchBoardGames();
+    this.props.fetchUserRating();
   }
 
   render() {
@@ -20,8 +28,11 @@ export default class Home extends React.PureComponent {
     return (
       <div className="page-home">
         <div style={containerStyle}>
-          <List boardGames={this.props.boardGames} isFetching={this.props.isFetching} showDetail={this.props.showDetail} search={this.props.search} />
-          <Detail detail={this.props.detail} addRating={this.props.addRating}/>
+          <List userRating={this.props.userRating} isFetching={this.props.isFetching} showDetail={this.props.showDetail} search={this.props.search} />
+          <div style={rightSide}>
+            <Detail detail={this.props.detail} addRating={this.props.addRating}/>
+            <Recommendations/>
+          </div>
         </div>
       </div>
     );

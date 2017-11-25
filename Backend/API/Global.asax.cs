@@ -2,6 +2,7 @@
 using Castle.Windsor;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
+using System.Data.Entity;
 
 namespace API
 {
@@ -25,6 +26,10 @@ namespace API
 
             GlobalConfiguration.Configuration.Services
                 .Replace(typeof(IHttpControllerActivator), new WindsorCompositionRoot(container));
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings
+                .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            GlobalConfiguration.Configuration.Formatters
+                .Remove(GlobalConfiguration.Configuration.Formatters.XmlFormatter);   
         }
     }
 }

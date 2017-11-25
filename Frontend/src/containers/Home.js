@@ -1,21 +1,22 @@
-import { connect } from "react-redux";
-import {addRating, fetchBoardGames, search, showDetail} from "../actions/boardGameListActions";
+import {connect} from "react-redux";
+import {addRating, fetchUserRating, search} from "../actions/userRatingActions";
 import Home from "../components/Home";
+import {showDetail} from "../actions/boardGameActions";
 
 const mapStateToProps = function (state) {
   return {
-    boardGames: state.boardGames.list,
-    isFetching: state.boardGames.isFetching,
-    detail: state.boardGames.detail,
+    userRating: state.userRating.list,
+    isFetching: state.userRating.isFetching,
+    detail: state.userRating.detail,
   }
 };
 
-const mapDispatchToProps = function(dispatch) {
+const mapDispatchToProps = function (dispatch) {
   return {
-    fetchBoardGames: () => dispatch(fetchBoardGames()),
+    fetchUserRating: () => dispatch(fetchUserRating()),
     showDetail: (id) => dispatch(showDetail(id)),
     addRating: (id, rating) => dispatch(addRating(id, rating)),
-    search: (name) => dispatch(search(name))
+    search: (id) => dispatch(search(id))
   }
 };
 
