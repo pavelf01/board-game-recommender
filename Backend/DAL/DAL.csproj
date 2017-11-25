@@ -72,6 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity\BaseEntity.cs" />
+    <Compile Include="Entity\BoardGameCategoryValue.cs" />
+    <Compile Include="Entity\BoardGameUserValue.cs" />
+    <Compile Include="Entity\CategoryIDF.cs" />
     <Compile Include="Entity\UserRating.cs" />
     <Compile Include="Entity\User.cs" />
     <Compile Include="Entity\BoardGameArtist.cs" />

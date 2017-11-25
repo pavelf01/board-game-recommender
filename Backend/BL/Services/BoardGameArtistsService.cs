@@ -20,6 +20,7 @@ namespace BL.Services
         {
             return _repository.GetById(ID);
         }
+
         public override BoardGameArtist GetByBGGIdentifier(string Key)
         {
             return this._repository.ByName(Key);

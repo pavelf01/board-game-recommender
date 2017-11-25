@@ -1,4 +1,6 @@
 ﻿using DAL.Entity;
+using System.Linq;
+using System.Collections.Generic;
 using System.Data.Entity;
 
 namespace BL.Repositories
@@ -10,6 +12,18 @@ namespace BL.Repositories
         public void Update(UserRating UserRating)
         {
             Context.SaveChanges();
+        }
+
+        public IEnumerable<UserRating> GetAllUserRatings(int userId)
+        {
+            var ratings = Context.Set<UserRating>().Where(i => i.User.Id == userId).ToList();
+
+            foreach (var rating in ratings)
+            {
+                Context.Entry(rating).Reference(g => g.BoardGame).Load();
+            }
+
+            return ratings;
         }
     }
 }

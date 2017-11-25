@@ -1,5 +1,6 @@
 ﻿using BL.Repositories;
 using DAL.Entity;
+using System.Collections.Generic;
 
 namespace BL.Services
 {
@@ -23,6 +24,11 @@ namespace BL.Services
         public override BoardGameCategory GetByBGGIdentifier(string Key)
         {
             return this._repository.ByName(Key);
+        }
+
+        public IEnumerable<BoardGameCategory> GetAll()
+        {
+            return _repository.GetAll();
         }
     }
 }

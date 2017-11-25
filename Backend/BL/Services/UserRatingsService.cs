@@ -1,6 +1,7 @@
 ﻿using BL.Repositories;
 using DAL.Entity;
 using System;
+using System.Collections.Generic;
 
 namespace BL.Services
 {
@@ -25,6 +26,11 @@ namespace BL.Services
         public override UserRating Get(int UserRatingId)
         {
             return _repository.GetById(UserRatingId);
+        }
+
+        public IEnumerable<UserRating> GetAllUserRatings(int userId)
+        {
+            return _repository.GetAllUserRatings(userId);
         }
     }
 }

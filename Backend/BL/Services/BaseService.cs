@@ -1,4 +1,6 @@
-﻿namespace BL.Services
+﻿using System.Collections.Generic;
+
+namespace BL.Services
 {
     public abstract class BaseService<TEntity>
     {

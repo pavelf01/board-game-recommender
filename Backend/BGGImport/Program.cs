@@ -13,11 +13,13 @@ namespace BGGImport
         {
             var container = new WindsorContainer();
             container.Install(new BL.Bootstrap.DI());
-            var importer = new Importer(container);
-            importer.Import(ReadIds().Skip(344).Take(2).ToArray(), (string message) =>
-            {
-                Console.WriteLine(message);
-            });
+
+            var recommenderTester = new RecommenderTester(container);
+            //var importer = new Importer(container);
+            //importer.Import(ReadIds().Skip(344).Take(2).ToArray(), (string message) =>
+            //{
+            //    Console.WriteLine(message);
+            //});
             Console.ReadLine();
         }
 

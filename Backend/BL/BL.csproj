@@ -86,6 +86,7 @@
     <Compile Include="Services\BoardGamePublishersService.cs" />
     <Compile Include="Services\BoardGameCategoriesService.cs" />
     <Compile Include="Services\BoardGameArtistsService.cs" />
+    <Compile Include="Services\RecommenderEngine\UserProfileService.cs" />
     <Compile Include="Services\UserRatingsService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\BoardGamesService.cs" />

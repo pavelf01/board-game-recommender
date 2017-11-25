@@ -1,6 +1,7 @@
 ﻿using BL.App;
 using BL.Repositories;
 using BL.Services;
+using BL.Services.RecommenderEngine;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -23,6 +24,9 @@ namespace BL.Bootstrap
                     .LifestyleTransient(),
                 Classes.FromAssemblyContaining<AppUnitOfWork>()
                     .BasedOn(typeof(BaseService<>))
+                    .LifestyleTransient(),
+                Classes.FromThisAssembly()
+                    .InNamespace("BL.Services.RecommenderEngine")
                     .LifestyleTransient()
            );
         }
