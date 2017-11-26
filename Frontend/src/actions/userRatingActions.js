@@ -1,4 +1,7 @@
-import {getUserRating, getById, postRating} from "../Api/userRatingApi";
+import {
+  getUserRating, getById, getContentBasedRecommendations,
+  getCollaborativeFilteringRecommendations, getRandomRecommendations
+} from "../Api/userRatingApi";
 
 export const FETCH_USER_RATINGS = 'FETCH_USER_RATINGS';
 export const FETCH_USER_RATINGS_SUCCESS = 'FETCH_USER_RATINGS_SUCCESS';
@@ -16,7 +19,7 @@ export function fetchUserRating() {
 
 export function search(id) {
   return function (dispatch) {
-    dispatch({type: FETCH_USER_RATINGS});
+    dispatch({type: FETCH_USER_RATINGS, payload: id});
     getById(id).then((userRating) => {
       dispatch({type: FETCH_USER_RATINGS_SUCCESS, payload: userRating})
     });
@@ -25,6 +28,7 @@ export function search(id) {
 
 export function getRecommendations(recommenderType) {
   return function (dispatch, getState) {
+    const id = getState().userRating.userId;
     switch(recommenderType) {
       case 'cont':
         getContentBasedRecommendations(id).then((recommendations) => {

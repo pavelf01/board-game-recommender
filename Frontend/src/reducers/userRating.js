@@ -1,9 +1,14 @@
-import {FETCH_USER_RATINGS, FETCH_USER_RATINGS_SUCCESS} from "../actions/userRatingActions";
+import {
+  FETCH_RECOMMENDATION_SUCCESS, FETCH_USER_RATINGS,
+  FETCH_USER_RATINGS_SUCCESS
+} from "../actions/userRatingActions";
 import {SHOW_DETAIL} from "../actions/boardGameActions";
 
 const initialState = {
-  list: [],
-  isFetching: false,
+  userRatings: [],
+  userId: '21919',
+  isFetching: true,
+  recommendations: [],
   detail: {
     Id: '',
     Name: '',
@@ -13,11 +18,13 @@ const initialState = {
 function userRatingReducer (state = initialState, action) {
   switch (action.type) {
     case FETCH_USER_RATINGS:
-      return { ...state, isFetching: true};
+      return { ...state, isFetching: true, userId: action.payload? action.payload : state.userId};
     case FETCH_USER_RATINGS_SUCCESS:
-      return { ...state, list: action.payload.map(val => val.BoardGame), isFetching: false }
+      return { ...state, userRatings: action.payload, isFetching: false };
     case SHOW_DETAIL:
-      return { ...state, detail: action.payload }
+      return { ...state, detail: action.payload };
+    case FETCH_RECOMMENDATION_SUCCESS:
+      return { ...state, recommendations: action.payload};
   }
   return state;
 }

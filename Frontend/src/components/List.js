@@ -14,11 +14,11 @@ export class List extends React.PureComponent {
 
 
   handleSearchInputChange = (event) => {
-    this.setState({searchValue: event.target.value});
+    this.setState({recommenderTypeValue: event.target.value});
   };
 
   search = () => {
-    this.props.search(this.state.searchValue)
+    this.props.search(this.state.recommenderTypeValue)
   };
 
   render(){
@@ -32,7 +32,10 @@ export class List extends React.PureComponent {
         <button className="btn btn-secondary" type="button" onClick={this.search}>Go!</button>
       </span>
       </div>
-      <ul className="list-group list-group-flush">{this.props.userRating.map(item => <li onClick={() => this.props.showDetail(item.Id)} className="list-group-item" key={item.Id}>{item.Name}</li>)}</ul>
+      <ul className="list-group list-group-flush">{this.props.userRating.map(item => <li onClick={() => this.props.showDetail(item.BoardGame.Id)} className="list-group-item" key={item.BoardGame.Id}>
+        <strong>Name:</strong> {item.BoardGame.Name} <strong>Rating:</strong> {item.Rating}
+        </li>)}
+        </ul>
     </div>
   }
 }

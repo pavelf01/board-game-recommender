@@ -1,13 +1,14 @@
 import {connect} from "react-redux";
-import {addRating, fetchUserRating, search} from "../actions/userRatingActions";
+import {addRating, fetchUserRating, getRecommendations, search} from "../actions/userRatingActions";
 import Home from "../components/Home";
 import {showDetail} from "../actions/boardGameActions";
 
 const mapStateToProps = function (state) {
   return {
-    userRating: state.userRating.list,
+    userRating: state.userRating.userRatings,
     isFetching: state.userRating.isFetching,
     detail: state.userRating.detail,
+    recommendations: state.userRating.recommendations,
   }
 };
 
@@ -16,7 +17,8 @@ const mapDispatchToProps = function (dispatch) {
     fetchUserRating: () => dispatch(fetchUserRating()),
     showDetail: (id) => dispatch(showDetail(id)),
     addRating: (id, rating) => dispatch(addRating(id, rating)),
-    search: (id) => dispatch(search(id))
+    search: (id) => dispatch(search(id)),
+    getRecommendations: (type) => dispatch(getRecommendations(type)),
   }
 };
 

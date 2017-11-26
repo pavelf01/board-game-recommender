@@ -31,7 +31,7 @@ export default class Home extends React.PureComponent {
           <List userRating={this.props.userRating} isFetching={this.props.isFetching} showDetail={this.props.showDetail} search={this.props.search} />
           <div style={rightSide}>
             <Detail detail={this.props.detail} addRating={this.props.addRating}/>
-            <Recommendations/>
+            <Recommendations getRecommendations={this.props.getRecommendations} recommendations={this.props.recommendations} showDetail={this.props.showDetail}/>
           </div>
         </div>
       </div>

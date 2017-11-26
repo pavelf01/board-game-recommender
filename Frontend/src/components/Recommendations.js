@@ -8,17 +8,17 @@ export class Recommendations extends React.PureComponent {
   constructor(props){
     super(props);
     this.state = {
-      searchValue: '',
+      recommenderTypeValue: '',
     }
   }
 
 
   handleSearchInputChange = (event) => {
-    this.setState({searchValue: event.target.value});
+    this.setState({recommenderTypeValue: event.target.value});
   };
 
   getRecommendations = () => {
-    this.props.getRecommendations(this.state.searchValue)
+    this.props.getRecommendations(this.state.recommenderTypeValue)
   };
 
   render(){
@@ -34,7 +34,7 @@ export class Recommendations extends React.PureComponent {
         <button className="btn btn-secondary" type="button" onClick={this.getRecommendations}>Go!</button>
       </span>
       </div>
+      {this.props.recommendations? <ul className="list-group list-group-flush">{this.props.recommendations.map(item => <li onClick={() => this.props.showDetail(item.Id)} className="list-group-item" key={item.Id}>{item.Name}</li>)}</ul>: null}
     </div>
   }
 }
-//<ul className="list-group list-group-flush">{this.props.userRating.map(item => <li onClick={() => this.props.showDetail(item.Id)} className="list-group-item" key={item.Id}>{item.Name}</li>)}</ul>

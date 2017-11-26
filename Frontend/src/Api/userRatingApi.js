@@ -1,6 +1,16 @@
 export function getUserRating() {
-  //return Promise.resolve([{name: 'Scythe', id: 1}, {name: 'Cyclades', id: 2}]);
   return fetch('http://localhost:62492/api/userRatings/21919')
+    .then(function (response) {
+      return response.json()
+    }).then(function (json) {
+      return json;
+    }).catch(function (ex) {
+      console.log('parsing failed', ex)
+    });
+}
+
+export function getById(id) {
+  return fetch(`http://localhost:62492/api/userRatings/${id}`)
     .then(function(response) {
       return response.json()
     }).then(function(json) {
@@ -10,13 +20,30 @@ export function getUserRating() {
     });
 }
 
-export function postRating(id, rating) {
-  // some post method
+export function getContentBasedRecommendations(id) {
+  return fetch(`http://localhost:62492/api/recommendations/content/${id}`)
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) {
+      return json;
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    });
 }
 
-// returning array of items by substring
-export function getById(id) {
-  return fetch(`http://localhost:62492/api/userRatings/${id}`)
+export function getCollaborativeFilteringRecommendations(id) {
+  return fetch(`http://localhost:62492/api/recommendations/collaborative/${id}`)
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) {
+      return json;
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    });
+}
+
+export function getRandomRecommendations(id) {
+  return fetch(`http://localhost:62492/api/recommendations/random/${id}`)
     .then(function(response) {
       return response.json()
     }).then(function(json) {
