@@ -1,4 +1,5 @@
 import * as React from "react";
+import {DropdownButton, MenuItem} from "react-bootstrap";
 
 const listStyle = {
   flexBasis: '50%',
@@ -8,17 +9,17 @@ export class List extends React.PureComponent {
   constructor(props){
     super(props);
     this.state = {
-      searchValue: '',
+      id: '21919',
     }
   }
 
 
   handleSearchInputChange = (event) => {
-    this.setState({recommenderTypeValue: event.target.value});
+    this.setState({id: event});
   };
 
   search = () => {
-    this.props.search(this.state.recommenderTypeValue)
+    this.props.search(this.state.id)
   };
 
   render(){
@@ -27,9 +28,12 @@ export class List extends React.PureComponent {
         <h2>User rated games</h2>
       </div>
       <div className="input-group">
-        <input type="text" className="form-control" placeholder="Search user by ID" aria-label="Search user by ID" onChange={this.handleSearchInputChange}></input>
+        <DropdownButton title={'Select user id'} onSelect={this.handleSearchInputChange} id={'select-user-id'}>
+          <MenuItem eventKey="21919">21919</MenuItem>
+          <MenuItem eventKey="21920">21920</MenuItem>
+        </DropdownButton>
       <span className="input-group-btn">
-        <button className="btn btn-secondary" type="button" onClick={this.search}>Go!</button>
+        <button className="btn btn-secondary" type="button" onClick={this.search}>{this.state.id} Go!</button>
       </span>
       </div>
       <ul className="list-group list-group-flush">{this.props.userRating.map(item => <li onClick={() => this.props.showDetail(item.BoardGame.Id)} className="list-group-item" key={item.BoardGame.Id}>
