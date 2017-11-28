@@ -37,6 +37,11 @@ namespace BL.Services
         {
             return _repository.GetList(page);
         }
+        
+        public IEnumerable<BoardGame> GetAll()
+        {
+            return _repository.GetAll();
+        }
 
         public IEnumerable<BoardGame> GetByFulltextSearch(string term)
         {

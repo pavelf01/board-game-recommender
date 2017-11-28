@@ -9,7 +9,8 @@ namespace BL.Services.RecommenderEngine
 {
     public class UserProfileService
     {
-        private const int TEST_USER_ID = 21919;
+        public int TestUserId { get; set; } = 21919;
+        private int boardGamesCount;
 
         private readonly UserRatingsService _userRatingsService;
         private readonly BoardGamesService _gamesService;
@@ -31,27 +32,23 @@ namespace BL.Services.RecommenderEngine
             // no board game category value record means that value is zero
             return game.Categories.Select((category) => new BoardGameCategoryValue(game.Id, category.Id, value));
         }
-
+        
         public List<BoardGameCategoryValue> ComputeBoardGameCategoriesValues()
         {
             // TODO this will do all board games at once and save into db
             // now this is done only for test user
-            var userRatings = _userRatingsService.GetAllUserRatings(TEST_USER_ID);
-            var userBoardGameIds = userRatings.Select((userRating) => userRating.BoardGame.Id);
-
-            return userBoardGameIds
+            var boardGames = _gamesService.GetAll();
+            boardGamesCount = boardGames.Count();
+            return boardGames.Select((boardGame) => boardGame.Id)
                 .Select((gameId) => _gamesService.GetWithRelated(gameId))
                 .SelectMany((game) => ComputeValuesForOneBoardGame(game))
                 .ToList();
         }
-
+        
         public IEnumerable<CategoryIDF> ComputeIDF(IEnumerable<BoardGameCategoryValue> categoryValues)
         {
             var categories = _categoriesService.GetAll().ToList();
             // for know we count only test users board games
-            var boardGamesCount = _userRatingsService.GetAllUserRatings(TEST_USER_ID)
-                .Select((userRating) => userRating.BoardGame.Id)
-                .Count();
 
             foreach (BoardGameCategory category in categories)
             {
@@ -64,7 +61,7 @@ namespace BL.Services.RecommenderEngine
 
         public List<BoardGameUserValue> CreateUserProfile(IEnumerable<BoardGameCategoryValue> categoriesValues)
         {
-            var userRatings = _userRatingsService.GetAllUserRatings(TEST_USER_ID);
+            var userRatings = _userRatingsService.GetAllUserRatings(TestUserId);
             var userMeanRating = userRatings.Average((userRating) => userRating.Rating);
             var categories = _categoriesService.GetAll().ToList();
             
@@ -89,30 +86,39 @@ namespace BL.Services.RecommenderEngine
                     value += rating * categoryValue.Value;
                 }
 
-               userProfile.Add(new BoardGameUserValue(TEST_USER_ID, category.Id, value));
+               userProfile.Add(new BoardGameUserValue(TestUserId, category.Id, value));
             }
 
             return userProfile;
         }
 
-        public double ComputePredictionValue(IEnumerable<BoardGameCategoryValue> categoryValues, IEnumerable<CategoryIDF> idfs, IEnumerable<BoardGameUserValue> userProfile, int boardGameId)
+        public IEnumerable<BoardGame> ComputePredictionValue(IEnumerable<BoardGameCategoryValue> categoryValues, IEnumerable<CategoryIDF> idfs, IEnumerable<BoardGameUserValue> userProfile)
         {
             var predictionValue = 0.0;
-
-            var gameCVs = categoryValues.Where((cv) => cv.GameId == boardGameId);
-            var up = userProfile.Where((bguv) => bguv.UserId == TEST_USER_ID);
-
-            foreach (CategoryIDF idf in idfs)
+            var boardGames = _gamesService.GetAll();
+            Dictionary<int, double> boardGamesPredValue = new Dictionary<int, double>();
+            
+            var up = userProfile.Where((bguv) => bguv.UserId == TestUserId);
+            foreach (var boardGame in boardGames)
             {
-                var categoryId = idf.CategoryId;
+                var gameCVs = categoryValues.Where((cv) => cv.GameId == boardGame.Id);
+                
+                foreach (CategoryIDF idf in idfs)
+                {
+                    var categoryId = idf.CategoryId;
 
-                var categoryValue = gameCVs.Where((cv) => cv.CategoryId == categoryId).FirstOrDefault()?.Value ?? 0.0;
-                var userProfileValue = up.Where((uv) => uv.CategoryId == categoryId).FirstOrDefault()?.Value ?? 0.0;
+                    var categoryValue = gameCVs.Where((cv) => cv.CategoryId == categoryId).FirstOrDefault()?.Value ?? 0.0;
+                    var userProfileValue = up.Where((uv) => uv.CategoryId == categoryId).FirstOrDefault()?.Value ?? 0.0;
 
-                predictionValue += idf.Value * categoryValue * userProfileValue;
+                    predictionValue += idf.Value * categoryValue * userProfileValue;
+                }
+                boardGamesPredValue.Add(boardGame.Id, predictionValue);
+                predictionValue = 0.0;
             }
 
-            return predictionValue;
+            var keys = boardGamesPredValue.OrderByDescending((value) => value.Value).Take(10).Select((value) => value.Key);
+
+            return boardGames.Where(boardGame => keys.Contains(boardGame.Id));
         }
     }
 }

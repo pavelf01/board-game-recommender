@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Web.Http;
+using BL.Services.RecommenderEngine;
 using DAL.Entity;
 
 namespace API.Controllers
@@ -10,6 +13,8 @@ namespace API.Controllers
     [RoutePrefix("api/recommendations")]
     public class RecommendationsController : ApiController
     {
+        private UserProfileService userProfileService { get; set; }
+        
         private static readonly BoardGame BoardGame1 = new BoardGame()
         {
             Name = "Cyclades",
@@ -35,7 +40,18 @@ namespace API.Controllers
         [HttpGet]
         public HttpResponseMessage GetCollaborative(int id)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, _boardGames);
+            Console.WriteLine("Content based recommender test running");
+
+            userProfileService.TestUserId = id;
+
+            var categoriesValues = userProfileService.ComputeBoardGameCategoriesValues();
+            var idfs = userProfileService.ComputeIDF(categoriesValues).ToList();
+            var userProfile = userProfileService.CreateUserProfile(categoriesValues);
+
+            var games = userProfileService.ComputePredictionValue(categoriesValues, idfs, userProfile); 
+            
+            Console.WriteLine("Content based recommender test finished");
+            return Request.CreateResponse(HttpStatusCode.OK, games);
         }
 
         [Route("random/{id:int}")]
