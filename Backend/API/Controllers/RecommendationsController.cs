@@ -13,8 +13,11 @@ namespace API.Controllers
     [RoutePrefix("api/recommendations")]
     public class RecommendationsController : ApiController
     {
-        private UserProfileService userProfileService { get; set; }
-        
+        private const int RECOMMENDATION_COUNT = 10;
+
+        private ContentBasedService _contentBasedService { get; set; }
+        private RandomService _randomService { get; set; }
+
         private static readonly BoardGame BoardGame1 = new BoardGame()
         {
             Name = "Cyclades",
@@ -31,26 +34,21 @@ namespace API.Controllers
         
         [Route("collaborative/{id:int}")]
         [HttpGet]
-        public HttpResponseMessage GetContent(int id)
+        public HttpResponseMessage GetCollaborative(int id)
         {
             return Request.CreateResponse(HttpStatusCode.OK, _boardGames);
         }
 
         [Route("content/{id:int}")]
         [HttpGet]
-        public HttpResponseMessage GetCollaborative(int id)
+        public HttpResponseMessage GetContentBased(int id)
         {
-            Console.WriteLine("Content based recommender test running");
+            var categoriesValues = _contentBasedService.ComputeBoardGameCategoriesValues();
+            var idfs = _contentBasedService.ComputeIDF(categoriesValues).ToList();
+            var userProfile = _contentBasedService.CreateUserProfile(id, new List<int>(), categoriesValues);
 
-            userProfileService.TestUserId = id;
-
-            var categoriesValues = userProfileService.ComputeBoardGameCategoriesValues();
-            var idfs = userProfileService.ComputeIDF(categoriesValues).ToList();
-            var userProfile = userProfileService.CreateUserProfile(categoriesValues);
-
-            var games = userProfileService.ComputePredictionValue(categoriesValues, idfs, userProfile); 
+            var games = _contentBasedService.GetRecommendedBoardGames(RECOMMENDATION_COUNT, id, categoriesValues, idfs, userProfile); 
             
-            Console.WriteLine("Content based recommender test finished");
             return Request.CreateResponse(HttpStatusCode.OK, games);
         }
 
@@ -58,7 +56,9 @@ namespace API.Controllers
         [HttpGet]
         public HttpResponseMessage GetRandom(int id)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, _boardGames);
+            var games = _randomService.GetRecommendedBoardGames(RECOMMENDATION_COUNT, id);
+
+            return Request.CreateResponse(HttpStatusCode.OK, games);
         }
     }
 }

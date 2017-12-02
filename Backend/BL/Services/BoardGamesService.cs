@@ -23,6 +23,11 @@ namespace BL.Services
             return _repository.GetWithRelated(BoardGameId);
         }
 
+        public BoardGame GetWithCategories(int BoardGameId)
+        {
+            return _repository.GetWithCategories(BoardGameId);
+        }
+
         public override BoardGame Get(int ID)
         {
             return _repository.GetById(ID);

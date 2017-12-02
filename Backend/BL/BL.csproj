@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -86,7 +87,9 @@
     <Compile Include="Services\BoardGamePublishersService.cs" />
     <Compile Include="Services\BoardGameCategoriesService.cs" />
     <Compile Include="Services\BoardGameArtistsService.cs" />
-    <Compile Include="Services\RecommenderEngine\UserProfileService.cs" />
+    <Compile Include="Services\RecommenderEngine\RecommendationEvaluationService.cs" />
+    <Compile Include="Services\RecommenderEngine\RandomService.cs" />
+    <Compile Include="Services\RecommenderEngine\ContentBasedService.cs" />
     <Compile Include="Services\UserRatingsService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\BoardGamesService.cs" />

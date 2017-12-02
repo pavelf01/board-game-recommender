@@ -29,9 +29,7 @@ namespace BL.Repositories
         
         public IEnumerable<BoardGame> GetAll()
         {
-            var games = Context.Set<BoardGame>().ToList();
-            this.LoadRealtions(games);
-            return games;
+            return Context.Set<BoardGame>().ToList();
         }
 
         public IEnumerable<BoardGame> GetByFulltextSearch(string term)
@@ -45,6 +43,13 @@ namespace BL.Repositories
         {
             var game = Context.Set<BoardGame>().Where(i => i.Id == Id).FirstOrDefault();
             this.LoadRealtions(new BoardGame[] { game });
+            return game;
+        }
+
+        public BoardGame GetWithCategories(int Id)
+        {
+            var game = Context.Set<BoardGame>().Where(i => i.Id == Id).FirstOrDefault();
+            Context.Entry(game).Collection(g => g.Categories).Load();
             return game;
         }
 
