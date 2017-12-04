@@ -31,6 +31,9 @@ export class List extends React.PureComponent {
         <DropdownButton title={'Select user id'} onSelect={this.handleSearchInputChange} id={'select-user-id'}>
           <MenuItem eventKey="21919">21919</MenuItem>
           <MenuItem eventKey="21920">21920</MenuItem>
+          <MenuItem eventKey="21921">21921</MenuItem>
+          <MenuItem eventKey="21922">21922</MenuItem>
+          <MenuItem eventKey="41380">41380</MenuItem>
         </DropdownButton>
       <span className="input-group-btn">
         <button className="btn btn-secondary" type="button" onClick={this.search}>{this.state.id} Go!</button>
