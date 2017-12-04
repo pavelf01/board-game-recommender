@@ -101,7 +101,7 @@ namespace BL.Services.RecommenderEngine
             var predictionValue = 0.0;
             var userRatings = _userRatingsService.GetAllUserRatings(userId).ToList();
             var boardGames = _gamesService.GetAll()
-                .Where((game) => userRatings.Any((rating) => game.Id != rating.BoardGame.Id));
+                .Where((game) => userRatings.All((rating) => game.Id != rating.BoardGame.Id));
             Dictionary<int, double> boardGamesPredValue = new Dictionary<int, double>();
             
             var userProfile = userProfiles.Where((bguv) => bguv.UserId == userId);
