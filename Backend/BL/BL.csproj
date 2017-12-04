@@ -74,6 +74,7 @@
     <Compile Include="Bootstrap\DI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\BoardGameCategoryValuesRepository.cs" />
     <Compile Include="Repositories\BoardGameDesignersRepository.cs" />
     <Compile Include="Repositories\BoardGameCategoriesRepository.cs" />
     <Compile Include="Repositories\BoardGamePublishersRepository.cs" />

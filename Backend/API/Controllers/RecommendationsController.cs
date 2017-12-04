@@ -15,8 +15,8 @@ namespace API.Controllers
     {
         private const int RECOMMENDATION_COUNT = 10;
 
-        private ContentBasedService _contentBasedService { get; set; }
-        private RandomService _randomService { get; set; }
+        public ContentBasedService _contentBasedService { get; set; }
+        public RandomService _randomService { get; set; }
 
         private static readonly BoardGame BoardGame1 = new BoardGame()
         {

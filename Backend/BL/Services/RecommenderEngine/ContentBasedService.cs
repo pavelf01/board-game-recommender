@@ -1,4 +1,5 @@
-﻿using DAL.Entity;
+﻿using BL.Repositories;
+using DAL.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,17 +10,17 @@ namespace BL.Services.RecommenderEngine
 {
     public class ContentBasedService
     {
-        private int boardGamesCount;
-
         private readonly UserRatingsService _userRatingsService;
         private readonly BoardGamesService _gamesService;
         private readonly BoardGameCategoriesService _categoriesService;
+        private readonly BoardGameCategoryValuesRepository _categoryValuesRepository;
 
-        public ContentBasedService(UserRatingsService userRatingsService, BoardGamesService gamesService, BoardGameCategoriesService categoriesService)
+        public ContentBasedService(UserRatingsService userRatingsService, BoardGamesService gamesService, BoardGameCategoriesService categoriesService,BoardGameCategoryValuesRepository categoryValuesRepository)
         {
             _userRatingsService = userRatingsService;
             _gamesService = gamesService;
             _categoriesService = categoriesService;
+            _categoryValuesRepository = categoryValuesRepository;
         }
 
         public IEnumerable<BoardGameCategoryValue> ComputeValuesForOneBoardGame(BoardGame game)
@@ -31,26 +32,30 @@ namespace BL.Services.RecommenderEngine
             // no board game category value record means that value is zero
             return game.Categories.Select((category) => new BoardGameCategoryValue(game.Id, category.Id, value));
         }
-        
+
         public List<BoardGameCategoryValue> ComputeBoardGameCategoriesValues()
         {
-            // TODO save into db
-            var boardGames = _gamesService.GetAll();
-            boardGamesCount = boardGames.Count();
-            return boardGames.Select((boardGame) => boardGame.Id)
-                .Select((gameId) => _gamesService.GetWithCategories(gameId))
-                .SelectMany((game) => ComputeValuesForOneBoardGame(game))
-                .ToList();
+            if (this._categoryValuesRepository.GetAll().Count() == 0)
+            {
+                var boardGames = _gamesService.GetAll();
+                var computed = boardGames.Select((boardGame) => boardGame.Id)
+                    .Select((gameId) => _gamesService.GetWithCategories(gameId))
+                    .SelectMany((game) => ComputeValuesForOneBoardGame(game))
+                    .ToList();
+                this._categoryValuesRepository.InsertMany(computed);
+            }
+            return this._categoryValuesRepository.GetAll().ToList();
         }
         
         public IEnumerable<CategoryIDF> ComputeIDF(IEnumerable<BoardGameCategoryValue> categoryValues)
         {
             var categories = _categoriesService.GetAll().ToList();
-
+            var boardGames = _gamesService.GetAll();
+            var count = boardGames.Count();
             foreach (BoardGameCategory category in categories)
             {
                 var value = categoryValues.Where((cv) => cv.CategoryId == category.Id).Count();
-                var idfValue = value == 0 ? 0.0 : Math.Log((double)boardGamesCount / (double)value, 10);
+                var idfValue = value == 0 ? 0.0 : Math.Log((double)count / (double)value, 10);
 
                 yield return new CategoryIDF(category.Id, idfValue); ;
             }

@@ -88,6 +88,10 @@
     <Compile Include="Migrations\201711091616539_Initial.Designer.cs">
       <DependentUpon>201711091616539_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712041154189_AddBoardGameCategoryValues.cs" />
+    <Compile Include="Migrations\201712041154189_AddBoardGameCategoryValues.Designer.cs">
+      <DependentUpon>201712041154189_AddBoardGameCategoryValues.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -102,6 +106,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201711091616539_Initial.resx">
       <DependentUpon>201711091616539_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712041154189_AddBoardGameCategoryValues.resx">
+      <DependentUpon>201712041154189_AddBoardGameCategoryValues.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

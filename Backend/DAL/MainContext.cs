@@ -19,5 +19,8 @@ namespace DAL
         public DbSet<BoardGamePublisher> BoardGamePublishers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserRating> UserRatings { get; set; }
+
+
+        public DbSet<BoardGameCategoryValue> BoardGameCategoryValues { get; set; }
     }
 }
