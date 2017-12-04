@@ -1,5 +1,6 @@
 ﻿using BL.Repositories;
 using DAL.Entity;
+using System.Collections.Generic;
 
 namespace BL.Services
 {
@@ -19,6 +20,11 @@ namespace BL.Services
         public override User Get(int UserId)
         {
             return _repository.GetById(UserId);
+        }
+
+        public IEnumerable<User> GetAll()
+        {
+            return _repository.GetAll();
         }
 
         public User GetUserByUserName(string UserName)

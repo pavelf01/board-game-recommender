@@ -25,5 +25,10 @@ namespace BL.Repositories
 
             return ratings;
         }
+
+        public int GetUserRatingsCount(int userId)
+        {
+            return Context.Set<UserRating>().ToList().Count();
+        }
     }
 }

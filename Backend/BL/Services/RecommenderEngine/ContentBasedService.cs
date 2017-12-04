@@ -99,7 +99,9 @@ namespace BL.Services.RecommenderEngine
         public IEnumerable<BoardGame> GetRecommendedBoardGames(int numOfGames, int userId, IEnumerable<BoardGameCategoryValue> categoryValues, IEnumerable<CategoryIDF> idfs, IEnumerable<BoardGameUserValue> userProfiles)
         {
             var predictionValue = 0.0;
-            var boardGames = _gamesService.GetAll();
+            var userRatings = _userRatingsService.GetAllUserRatings(userId).ToList();
+            var boardGames = _gamesService.GetAll()
+                .Where((game) => userRatings.Any((rating) => game.Id != rating.BoardGame.Id));
             Dictionary<int, double> boardGamesPredValue = new Dictionary<int, double>();
             
             var userProfile = userProfiles.Where((bguv) => bguv.UserId == userId);

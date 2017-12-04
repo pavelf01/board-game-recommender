@@ -32,5 +32,10 @@ namespace BL.Services
         {
             return _repository.GetAllUserRatings(userId);
         }
+
+        public int GetUserRatingsCount(int userId)
+        {
+            return _repository.GetUserRatingsCount(userId);
+        }
     }
 }
