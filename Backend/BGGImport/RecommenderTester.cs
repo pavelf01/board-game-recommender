@@ -39,7 +39,8 @@ namespace BGGImport
 
             this.Container = Container;
 
-            TryContentBasedRecommendations();
+            EvaluateContentBasedRecommendations();
+            //TryContentBasedRecommendations();
             //TryRandomRecommendations();
         }
 
