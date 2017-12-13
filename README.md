@@ -28,5 +28,7 @@ Backend:
 # Team Roles
 
 Pavej Fojtík - Frontend, API
+
 Aleš Kopecký - Data import, Databse structure, Model, API
+
 Simona Kruppová - API, Content-based recommender, Random recommender
